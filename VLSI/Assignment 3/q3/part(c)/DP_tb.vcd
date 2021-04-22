@@ -1,0 +1,169 @@
+$date
+	Sat Apr  3 19:57:19 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module DP_tb $end
+$var wire 6 ! Z [5:0] $end
+$var wire 6 " YR [5:0] $end
+$var wire 1 # XR_gt_YR $end
+$var wire 1 $ XR_gt_0 $end
+$var wire 6 % XR [5:0] $end
+$var reg 1 & LoadXR $end
+$var reg 1 ' LoadYR $end
+$var reg 1 ( SelectXY $end
+$var reg 1 ) Subtract $end
+$var reg 1 * Swap $end
+$var reg 6 + X [5:0] $end
+$var reg 6 , Y [5:0] $end
+$var reg 1 - clock $end
+$var reg 1 . reset $end
+$scope module DUT $end
+$var wire 6 / A [5:0] $end
+$var wire 6 0 B [5:0] $end
+$var wire 6 1 Out [5:0] $end
+$var wire 1 - clk $end
+$var wire 1 & loadxr $end
+$var wire 1 ' loadyr $end
+$var wire 6 2 reg_AR_out [5:0] $end
+$var wire 6 3 reg_BR_out [5:0] $end
+$var wire 1 . reset $end
+$var wire 1 ( selectxy $end
+$var wire 1 ) subract $end
+$var wire 1 * swap $end
+$var wire 6 4 sub_out [5:0] $end
+$var wire 6 5 reg_BR_in [5:0] $end
+$var wire 6 6 reg_AR_in [5:0] $end
+$var wire 1 $ K2 $end
+$var wire 1 # K1 $end
+$var reg 6 7 AR [5:0] $end
+$var reg 6 8 BR [5:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 8
+b0 7
+b1 6
+b10 5
+b0 4
+b0 3
+b0 2
+b0 1
+b10 0
+b1 /
+1.
+1-
+b10 ,
+b1 +
+0*
+0)
+1(
+1'
+1&
+b0 %
+1$
+0#
+b0 "
+b0 !
+$end
+#5
+0-
+#6
+0.
+#10
+1#
+b1 !
+b1 1
+b1 3
+b1 "
+b1 8
+b0 4
+b1 2
+b1 %
+b1 7
+1-
+#15
+0-
+#20
+1-
+#25
+0-
+#30
+1-
+#35
+0-
+#40
+1-
+#45
+0-
+#50
+1-
+#55
+0-
+#60
+1-
+#65
+0-
+#70
+1-
+#75
+0-
+#80
+1-
+#85
+0-
+#90
+1-
+#95
+0-
+#100
+1-
+#105
+0-
+#110
+1-
+#115
+0-
+#120
+1-
+#125
+0-
+#130
+1-
+#135
+0-
+#140
+1-
+#145
+0-
+#150
+1-
+#155
+0-
+#160
+1-
+#165
+0-
+#170
+1-
+#175
+0-
+#180
+1-
+#185
+0-
+#190
+1-
+#195
+0-
+#200
+1-
+#205
+0-
+#206

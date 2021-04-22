@@ -1,0 +1,91 @@
+.include TSMC_180nm.txt
+
+.param LAMBDA = 0.09u
+.param W = {4*LAMBDA}
+.global gnd vdd
+
+VDD vdd gnd 1.8
+
+**INPUTS**
+Vin1 A  gnd pulse(1.8 0 0ns 100ps 100ps 10ns 20ns 0)
+Vin2 B  gnd pulse(1.8 0 0ns 100ps 100ps 20ns 40ns 0) 
+Vin3 S  gnd 1.8
+Vin4 S_bar gnd 0
+
+**INPUT INVERTER**
+.subckt cmosinv out in hi lo
+
+.param width_N = {W}
+.param width_P = {2*W}
+
+MN out in lo lo CMOSN W={width_N} L={2*LAMBDA} AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+MP out in hi hi CMOSP W={width_P} L={2*LAMBDA} AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+.ends cmosinv
+
+**OUTPUT INVERTER**
+.subckt varinv out in hi lo pmtr = 3
+
+.param width_N = {pmtr*W} 
+.param width_P = {(6-pmtr)*W}
+
+MN out in lo lo CMOSN W={width_N} L={2*LAMBDA} AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+MP out in hi hi CMOSP W={width_P} L={2*LAMBDA} AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+.ends varinv
+
+**INPUT INVERTER**
+xI1 in A     vdd gnd cmosinv
+xI2 in1 B     vdd gnd cmosinv
+
+**OUTPUT INVERTER**
+xI3 Y  out vdd gnd varinv pmtr = 2.2
+
+
+**PASS TRANSISTORS**
+M1 in  S out gnd CMOSN W={W} L={2*LAMBDA} AS={5*W*LAMBDA} PS={10*LAMBDA+2*W} AD={5*W*LAMBDA} PD={10*LAMBDA+2*W}
+M2 in1 S_bar out gnd CMOSN W={W} L={2*LAMBDA} AS={5*W*LAMBDA} PS={10*LAMBDA+2*W} AD={5*W*LAMBDA} PD={10*LAMBDA+2*W}
+
+
+**TRANSIENT ANALYSIS**
+.tran 10ps 100ns
+
+
+*Calculating delay from A to Y
+.measure tran fall
++TRIG v(A) VAL = '0.5*1.8' FALL = 1
++TARG v(Y) VAL = '0.5*1.8' FALL = 1
+.measure tran rise
++TRIG v(A) VAL = '0.5*1.8' RISE = 1
++TARG v(Y) VAL = '0.5*1.8' RISE = 1
+.measure tran delay_AtoY param = (fall + rise)/2 goal = 0
+
+*Calculating delay from B to Y
+*.measure tran fall
+*+TRIG v(B) VAL = '0.5*1.8' FALL = 2
+*+TARG v(Y) VAL = '0.5*1.8' FALL = 2
+*.measure tran rise
+*+TRIG v(B) VAL = '0.5*1.8' RISE = 2
+*+TARG v(Y) VAL = '0.5*1.8' RISE = 2
+*.measure tran delay_BtoY param = (fall + rise)/2 goal = 0
+
+**PLOTS**
+.control
+	run
+	set hcopypscolor = 1
+	set color0 = white
+	set color1 = black
+	
+	set curplottitle = "tbphariharan 2019102019(a)"
+	plot A
+	hardcopy 1_A.eps A
+	
+	set curplottitle = "tbphariharan 2019102019(b)"
+	plot B
+	hardcopy 1_B.eps B
+
+	set curplottitle = "tbphariharan 2019102019 output(S = 1)"
+	plot Y
+	hardcopy 1_Y.eps Y
+	
+.endc

@@ -1,0 +1,84 @@
+.include TSMC_180nm.txt
+
+.global gnd vdd
+
+.param LAMBDA = 0.09u
+.param SUPPLY = 1.8v
+.param width = {5*LAMBDA}
+.param width_N = width
+.param width_P = {2*width_N}
+.param length = 0.18u
+.param siz = 3
+
+VDD c gnd 'SUPPLY'
+*VDD c2 gnd 1.8v
+*VDD c3 gnd 'SUPPLY'
+*Vin a 0 gnd
+vin a gnd   pulse 0 1.8 0n 100p 100p 10n 20n
+vin2 b gnd  pulse 1.8 0 0n 100p 100p 10n 20n 
+vin3 s gnd   1.8
+vin4 s_bar gnd 0 
+* inverter A **
+M1 out1 a c c CMOSP W = {width_P} L = {length}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P}
++ AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+M2 out1 a gnd gnd CMOSN W = {width_N} L = {length}
++ AS = {5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N}
++ AD = {5*width_N*LAMBDA} PD = {10*LAMBDA+2*width_N}
+
+
+M3 out1 s k gnd CMOSN W = {width_N} L = {length}
++ AS = {5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N}
++ AD = {5*width_N*LAMBDA} PD = {10*LAMBDA+2*width_N}
+
+* inverter B **
+M6 out2 b c c CMOSP W = {width_P} L = {length}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P}
++ AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+M7 out2 b gnd gnd CMOSN W = {width_N} L = {length}
++ AS = {5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N}
++ AD = {5*width_N*LAMBDA} PD = {10*LAMBDA+2*width_N}
+
+
+M8 out2 s_bar k gnd CMOSN W = {width_N} L = {length}
++ AS = {5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N}
++ AD = {5*width_N*LAMBDA} PD = {10*LAMBDA+2*width_N}
+
+* inverter out **
+M4 y k c c CMOSP W = {((6-siz)*width)} L = {length}
++ AS={5*((6-siz)width)*LAMBDA} PS={10*LAMBDA+2((6-siz)*width)}
++ AD={5*((6-siz)width)*LAMBDA} PD={10*LAMBDA+2((6-siz)*width)}
+
+M5 y k gnd gnd CMOSN W = {(siz*width)} L = {length}
++ AS = {5*(siz*width)LAMBDA} PS={10*LAMBDA+2(siz*width)}
++ AD = {5*(siz*width)LAMBDA} PD = {10*LAMBDA+2(siz*width)}
+
+*Cin a gnd 50f
+*Cout y gnd 100f
+*Cin2 b gnd 100f
+* parasitic capacitance **
+C0 out1 gnd 0.52fF
+C1 out2 gnd 0.52fF
+C2 k Gnd 0.5fF
+
+.measure tran rise
++TRIG v(a) VAL = 0.9V CROSS = 1 TARG v(y) VAL = 0.9V CROSS = 1
+.measure tran fall
++TRIG v(a) VAL = 0.9V CROSS = 2 TARG v(y) VAL = 0.9V CROSS = 2
+
+
+.tran 0.1n 100n
+*.dc Vin 0 1.8 0.01
+.control
+set hcopypscolor = 1 *White background for saving plots
+set color0=white 
+set color1=black 
+
+run
+set curplottitle=""
+plot   v(y) v(a)
+set hcopypscolor = 1
+*hardcopy question3_both.esp v(b) deriv(v(b))/deriv(v(inp))
+.endc

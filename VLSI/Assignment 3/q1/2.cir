@@ -1,0 +1,72 @@
+.include TSMC_180nm.txt
+
+.param LAMBDA = 0.09u
+.param Width_N = {4*LAMBDA}
+.global gnd vdd
+
+VDD vdd gnd 1.8
+
+
+Vin1 x1 gnd pulse(1.8 0 0ns 100ps 100ps 10ns 20ns 0)
+Vin1_bar x1_bar gnd pulse(0 1.8 0ns 100ps 100ps 10ns 20ns 0)
+Vin2 x2 gnd pulse(1.8 0 0ns 100ps 100ps 20ns 40ns 0)
+Vin2_bar x2_bar gnd pulse(0 1.8 0ns 100ps 100ps 20ns 40ns 0)
+Vin3 x3 gnd pulse(1.8 0 0ns 100ps 100ps 40ns 80ns 0)
+Vin3_bar x3_bar gnd pulse(0 1.8 0ns 100ps 100ps 40ns 80ns 0)
+Vin4 x4 gnd pulse(1.8 0 0ns 100ps 100ps 80ns 200ns 0)
+Vin4_bar x4_bar gnd pulse(0 1.8 0ns 100ps 100ps 80ns 160ns 0)
+
+
+.subckt mux A B sel sel_bar out
+	
+M1 A sel out gnd CMOSN W={width_N} L={2*LAMBDA} AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+
+M2 B sel_bar out gnd CMOSN W={width_N} L={2*LAMBDA} AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+	
+.ends mux
+
+
+xM1 vdd x4  x3 x3_bar f1 mux
+xM2 x4  gnd x3 x3_bar f2 mux
+xM3 vdd f1  x2 x2_bar f3 mux
+xM4 f1  f2  x2 x2_bar f4 mux
+xM5 f3  f4  x1 x1_bar f  mux
+
+.tran 5ps 200ns
+
+.measure tran rise
++TRIG V(f) VAL = '0.1*1.2' RISE = 1
++TARG V(f) VAL = '0.9*1.2' RISE = 1
+
+.measure tran fall
++TRIG V(f) VAL = '0.9*1.2' FALL = 1
++TARG V(f) VAL = '0.1*1.2' FALL = 1
+.control
+	
+	set hcopypscolor = 1
+	set color0 = white
+	set color1 = black
+	
+	run
+	
+	set curplottitle = "tbphariharan-2019102019-2b_x1"
+	plot x1
+	hardcopy x1.eps x1
+
+	set curplottitle = "tbphariharan-2019102019-2b_x2"
+	plot x2
+	hardcopy x2.eps x2
+
+	set curplottitle = "tbphariharan-2019102019-2b_x3"
+	plot x3
+	hardcopy x3.eps x3
+
+	set curplottitle = "tbphariharan-2019102019-2b_x4"
+	plot x4
+	hardcopy x4.eps x4
+
+	set curplottitle = "tbphariharan-2019102019-2b_f"
+	plot f
+	hardcopy f.eps f
+	
+.endc

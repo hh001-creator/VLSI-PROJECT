@@ -1,0 +1,56 @@
+$date
+	Sun Apr  4 20:18:27 2021
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module gcd_behavioraltb $end
+$var wire 16 ! out1 [15:0] $end
+$var wire 16 " out [15:0] $end
+$var reg 16 # AR [15:0] $end
+$var reg 16 $ AR1 [15:0] $end
+$var reg 16 % BR [15:0] $end
+$var reg 16 & BR1 [15:0] $end
+$scope module gcd_unit $end
+$var wire 16 ' AR [15:0] $end
+$var wire 16 ( BR [15:0] $end
+$var reg 16 ) A [15:0] $end
+$var reg 16 * B [15:0] $end
+$var reg 16 + out [15:0] $end
+$var reg 16 , swap [15:0] $end
+$upscope $end
+$scope module gcd_unit1 $end
+$var wire 16 - AR [15:0] $end
+$var wire 16 . BR [15:0] $end
+$var reg 16 / A [15:0] $end
+$var reg 16 0 B [15:0] $end
+$var reg 16 1 out [15:0] $end
+$var reg 16 2 swap [15:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+b0 2
+b1000 1
+b0 0
+b1000 /
+b10000 .
+b11000 -
+b0 ,
+b1 +
+b0 *
+b1 )
+b10011 (
+b11011 '
+b10000 &
+b10011 %
+b11000 $
+b11011 #
+b1 "
+b1000 !
+$end
+#10

@@ -1,0 +1,62 @@
+.include TSMC_180nm.txt
+.param SUPPLY=1.8
+.param LAMBDA=0.18u
+.global gnd vdd
+
+
+Vdd	vdd	gnd	'SUPPLY'
+VA A gnd 0V
+VB B gnd 0V
+Vsel S gnd 1.8
+VselB Sb gnd 1.8
+
+.subckt inv y x vdd_ gnd_  Wp=2 Wn=1 W=1.8u
+.param width_N={Wn*W}
+.param width_P={Wp*W}
+
+M1      y       x       gnd_     gnd_  CMOSN   W={width_N}   L={LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+M2      y       x       vdd_     vdd_  CMOSP   W={width_P}   L={LAMBDA}
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+.ends inv
+
+.param Width = 0.72u 
+.param K = 2
+
+*xs SB S vdd gnd inv Wp = 2 Wn=1 W={Width}
+xa ya A vdd gnd inv Wp = 2 Wn=1 W={Width}
+ca A gnd 1fF
+xb yb B vdd gnd inv Wp = 2 Wn=1 W={Width}
+cb B gnd 1fF
+.param width_N= Width
+MS      ya       S       sout     gnd  CMOSN   W={width_N}   L={LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+MSb     yb       SB       sout    gnd  CMOSN   W={width_N}   L={LAMBDA}
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+
+csout sout gnd 1fF
+xout y sout vdd gnd inv Wp =k Wn=6-k W={Width}
+Cout y gnd 1fF
+
+.measure tran tphl  trig v(A)  val=0.9 rise=1  targ v(y)  val=0.9 rise=2 
+.measure tran tplh  trig v(A)  val=0.9 fall=1   targ  v(Y)  val=0.9 fall=2
+.measure tran tpd param='(tphl+tplh)/2' goal=0
+
+.tran 5ps 10ns
+
+.control
+set hcopypscolor = 1 *White background for saving plots
+    set color0 = White
+    set color1 = black
+    set color2 = blue
+    set color3 = red
+  run  
+  set curplottitle="shaantanu kulkarni  2019102031"
+  plot V(A)  
+  plot V(s) V(Y)
+  plot V(B) 
+    
+.endc
+
+.end
