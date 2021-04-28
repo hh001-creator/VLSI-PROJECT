@@ -1,0 +1,25 @@
+.subckt DLatch out in clk clk_bar hi lo
+M1 n1  in  lo lo CMOSN W={width_N} L={2*LAMBDA} 
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} 
++ AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+
+M2 out clk_bar n1 lo CMOSN W={width_N} L={2*LAMBDA} 
++ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} 
++ AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
+
+M3 n2  in  hi  hi  CMOSP W={width_P} L={2*LAMBDA} 
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P}
++ AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+M4 out clk n2  hi  CMOSP W={width_P} L={2*LAMBDA} 
++ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} 
++ AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
+
+.ends DLatch
+
+.subckt DFlipFlop out in clk clk_bar hi lo
+
+xDl1 op1 in clk clk_bar hi lo DLatch
+xDl2 out op1 clk_bar clk hi lo DLatch
+
+.ends DFlipFlop

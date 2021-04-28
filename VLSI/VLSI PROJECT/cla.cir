@@ -1,24 +1,4 @@
-.include "TSMC_180nm.txt"
 .include "logicgates.cir"
-.param LAMBDA = 0.09u
-.param width_N = {10*LAMBDA}
-.param width_P = {2*width_N}
-.param SUPPLY = 1.8
-.global gnd vdd
-
-VDD vdd gnd 1.8
-**INPUTS**
-Vin1 A1 gnd pulse(0 1.8 0 0 0 100ns 0)
-Vin2 A2 gnd pulse(0 1.8 0 0 0 100ns 0)
-Vin3 A3 gnd pulse(0 1.8 0 0 0 100ns 0)
-Vin4 A4 gnd pulse(0 1.8 0 0 0 100ns 0)
-
-Vin5 B1 gnd pulse(0 1.8 0 0 0 100ns 0)
-Vin6 B2 gnd pulse(0 1.8 0 0 0 100ns 0)
-Vin7 B3 gnd pulse(0 1.8 0 0 0 100ns 0)
-Vin8 B4 gnd pulse(0 1.8 0 0 0 100ns 0) 
-
-
 
 .subckt cla ina1 ina2 ina3 ina4 inb1 inb2 inb3 inb4 out1 out2 out3 out4 out5 hi lo
 *P1 P2 P3 P4
@@ -68,25 +48,4 @@ xXo1 out1 P1 lo hi lo cmosxor
 xXo2 out2 P2 G1 hi lo cmosxor
 xXo3 out3 P3 C3 hi lo cmosxor
 xXo4 out4 P4 C4 hi lo cmosxor
-
 .ends cla
-
-
-xcla1 A1 A2 A3 A4 B1 B2 B3 B4 S1 S2 S3 S4 Cout vdd gnd cla 
-.tran 10ps 50ns 
-
-*.measure tran tplh
-*+ TRIG v(A) VAL = 'SUPPLY/2' FALL = 1
-*+ TARG V(OpAnd) VAL = 'SUPPLY/2' RISE = 1
-*.measure tran tphl
-*+ TRIG V(A) VAL = 'SUPPLY/2' RISE = 1
-*+ TARG V(OpAnd) VAL = 'SUPPLY/2' FALL = 1
-
-.control
-	run
-	set hcopypscolor = 1
-	set color0 = white
-	set color1 = black
-	
-.endc
-.end
