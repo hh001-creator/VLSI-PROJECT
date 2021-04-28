@@ -1,4 +1,5 @@
-.include TSMC_180nm.txt
+.include "TSMC_180nm.txt"
+.include "logicgates.cir"
 .param LAMBDA = 0.09u
 .param width_N = {10*LAMBDA}
 .param width_P = {2*width_N}
@@ -12,108 +13,66 @@ Vin2 A2 gnd pulse(0 1.8 0 0 0 100ns 0)
 Vin3 A3 gnd pulse(0 1.8 0 0 0 100ns 0)
 Vin4 A4 gnd pulse(0 1.8 0 0 0 100ns 0)
 
-Vin5 B1 gnd pulse(0 1.8 5ns 0 0 100ns 0)
-Vin6 B2 gnd pulse(0 0 0 0 0 100ns 0)
-Vin7 B3 gnd pulse(0 0 0 0 0 100ns 0)
-Vin8 B4 gnd pulse(0 0 0 0 0 100ns 0) 
-
-.subckt cmosinv out in hi lo 
-M1 out in lo lo 
-+ CMOSN W={width_N} L={2*LAMBDA} 
-+ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} 
-+ AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
-
-M2 out in hi hi 
-+ CMOSP W={width_P} L={2*LAMBDA} 
-+ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} 
-+ AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
-
-.ends cmosinv
-
-.subckt cmosnand out in1 in2 hi lo
-M1 out in1 hi hi 
-+ CMOSP W={width_P} L={2*LAMBDA} 
-+ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} 
-+ AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
-
-M2 out in2 hi hi
-+ CMOSP W={width_P} L={2*LAMBDA} 
-+ AS={5*width_P*LAMBDA} PS={10*LAMBDA+2*width_P} 
-+ AD={5*width_P*LAMBDA} PD={10*LAMBDA+2*width_P}
-
-M3 out in1 C gnd
-+ CMOSN W={width_N} L={2*LAMBDA} 
-+ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} 
-+ AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
-
-M4 C in2 gnd gnd
-+ CMOSN W={width_N} L={2*LAMBDA} 
-+ AS={5*width_N*LAMBDA} PS={10*LAMBDA+2*width_N} 
-+ AD={5*width_N*LAMBDA} PD={10*LAMBDA+2*width_N}
-
-.ends cmosnand
-
-************AND GATE************
-
-.subckt cmosand out in1 in2 hi lo
-xND1 out1 in1 in2 hi lo cmosnand
-xI1 out out1 hi lo cmosinv
-.ends cmosand
-*******************************
-
-************OR GATE************
-.subckt cmosor out in1 in2 hi lo
-xI2 o1 in1 hi lo cmosinv
-xI3 o2 in2 hi lo cmosinv
-xND2 out o1 o2 vdd gnd cmosnand
-.ends cmosor
-
-*******************************
-
-************XOR GATE************
-.subckt cmosxor out in1 in2 hi lo
-xND3 o1 in1 in2 vdd gnd cmosnand
-xND4 o2 in1 o1 vdd gnd cmosnand
-xND5 o3 o1 in2 vdd gnd cmosnand
-xND6 out o2 o3 vdd gnd cmosnand
-.ends cmosxor
-*******************************
-
-xX1 P1 A1 B1 vdd gnd cmosxor
-xX2 P2 A2 B2 vdd gnd cmosxor
-xX3 P3 A3 B3 vdd gnd cmosxor
-xX4 P4 A4 B4 vdd gnd cmosxor
-
-xA1 G1 A1 B1 vdd gnd cmosand
-xA2 G2 A2 B2 vdd gnd cmosand
-xA3 G3 A3 B3 vdd gnd cmosand
-xA4 G4 A4 B4 vdd gnd cmosand
-
-**********C3******************
-xAn1 Op1 P2 G1 vdd gnd cmosand
-xO1 C3 G2 Op1 vdd gnd cmosor
-******************************
-
-xAn2 Op2 P3 G2 vdd gnd cmosand
-
-**********P3P2G1***************
-xAn3 Op3 P3 P2 vdd gnd cmosand
-xAn4 Op4 Op3 G1 vdd gnd cmosand
-********************************
-*********G3 + P3G2*************
-xO2 Op5 G3 Op2 vdd gnd cmosor
-*******************************
-
-**************C4***************
-xO3 C4 Op5 Op4 vdd gnd cmosor
-******************************
+Vin5 B1 gnd pulse(0 1.8 0 0 0 100ns 0)
+Vin6 B2 gnd pulse(0 1.8 0 0 0 100ns 0)
+Vin7 B3 gnd pulse(0 1.8 0 0 0 100ns 0)
+Vin8 B4 gnd pulse(0 1.8 0 0 0 100ns 0) 
 
 
 
-xXo1 S1 P1 gnd vdd gnd cmosxor
-xXo2 S2 P2 G1 vdd gnd cmosxor
-xXo3 S3 P3 C3 vdd gnd cmosxor
-xXo4 S4 P4 C4 vdd gnd cmosxor
+.subckt cla ina1 ina2 ina3 ina4 inb1 inb2 inb3 inb4 out1 out2 out3 out4 out5 hi lo
+*P1 P2 P3 P4
+xX1 P1 ina1 inb1 hi lo cmosxor
+xX2 P2 ina2 inb2 hi lo cmosxor
+xX3 P3 ina3 inb3 hi lo cmosxor
+xX4 P4 ina4 inb4 hi lo cmosxor
+
+** G1 G2 G3 G4
+xA1 G1 ina1 inb1 hi lo cmosand
+xA2 G2 ina2 inb2 hi lo cmosand
+xA3 G3 ina3 inb3 hi lo cmosand
+xA4 G4 ina4 inb4 hi lo cmosand
+
+** C1 = 0 
+** C2 = G1
+** C3 = G2 + P2G1
+**Op1 = P2G1
+xAn1 Op1 P2 G1 hi lo cmosand
+xO1 C3 G2 Op1 hi lo cmosor
+
+**C4 = G3 + P3G2 + P3P2G1
+** Op2 = P3G2
+xAn2 Op2 P3 G2 hi lo cmosand
+** Op3 = P3P2G1
+xAn3 Op3 P3 Op1 hi lo cmosand
+**Op4 =  G3 + P3G2
+xO2 Op4 G3 Op2 hi lo cmosor
+** C4 = Op4 + Op3
+xO3 C4 Op4 Op3 hi lo cmosor
+
+** C5 = G4 + P4G3 + P4P3G2 + P4P3P2G1 = G4 + ot1 + ot2  + ot3
+** Ot1 = P4G3
+xAnd1 Ot1 P4 G3 hi lo cmosand
+** Ot2 = P4P3G2
+xAnd2 Ot2 P4 Op2 hi lo cmosand
+** Ot3 = P4P3P2G1
+xAnd3 Ot3 P4 Op4 hi lo cmosand
+** Ot4 = G4 + Ot1
+xOrg1 Ot4 G4 Ot1 hi lo cmosor
+** Ot5 = Ot2 + Ot3
+xOrg2 Ot5 Ot2 Ot3 hi lo cmosor
+** out5 = Ot4 + Ot5 => Cout
+xOrg3 out5 Ot5 Ot4 hi lo cmosor
+
+xXo1 out1 P1 lo hi lo cmosxor
+xXo2 out2 P2 G1 hi lo cmosxor
+xXo3 out3 P3 C3 hi lo cmosxor
+xXo4 out4 P4 C4 hi lo cmosxor
+
+.ends cla
+
+
+xcla1 A1 A2 A3 A4 B1 B2 B3 B4 S1 S2 S3 S4 Cout vdd gnd cla 
 .tran 10ps 50ns 
 
 *.measure tran tplh

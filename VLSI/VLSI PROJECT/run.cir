@@ -1,0 +1,18 @@
+.include TSMC_180nm.txt
+.include inv.cir
+.param LAMBDA = 0.09u
+.param width_N = {10*LAMBDA}
+.param width_P = {2*width_N}
+.global gnd vdd
+
+Vin1 A1 gnd pulse(0 1.8 0 0 0 100ns 0)
+
+xI1 out A1 vdd gnd cmosinv
+
+.tran 10ps 50ns
+
+.control
+    run
+.endc
+
+.end

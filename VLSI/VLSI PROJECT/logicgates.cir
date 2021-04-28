@@ -1,0 +1,24 @@
+.include "cmoslogic.cir"
+
+**AND GATE
+.subckt cmosand out in1 in2 hi lo
+xND1 out1 in1 in2 hi lo cmosnand
+xI1 out out1 hi lo cmosinv
+.ends cmosand
+
+
+**OR GATE
+.subckt cmosor out in1 in2 hi lo
+xI2 o1 in1 hi lo cmosinv
+xI3 o2 in2 hi lo cmosinv
+xND2 out o1 o2 vdd gnd cmosnand
+.ends cmosor
+
+
+**XOR GATE
+.subckt cmosxor out in1 in2 hi lo
+xND3 o1 in1 in2 vdd gnd cmosnand
+xND4 o2 in1 o1 vdd gnd cmosnand
+xND5 o3 o1 in2 vdd gnd cmosnand
+xND6 out o2 o3 vdd gnd cmosnand
+.ends cmosxor
