@@ -108,8 +108,7 @@ xO2 Op5 G3 Op2 vdd gnd cmosor
 xO3 C4 Op5 Op4 vdd gnd cmosor
 ******************************
 
-xAn5 Op6 P4 C4 vdd gnd cmosand
-xO4 C5 G4 Op6 vdd gnd cmosor
+
 
 xXo1 S1 P1 gnd vdd gnd cmosxor
 xXo2 S2 P2 G1 vdd gnd cmosxor
